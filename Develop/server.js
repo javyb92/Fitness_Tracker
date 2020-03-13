@@ -25,16 +25,43 @@ db.Workout.create({ name: "Workouts" })
     console.log(message);
   });
 
-app.get("/exercises", (req, res) => {
-  db.exercises.find({})
-    .then(dbexcerises => {
-      res.json(dbexercises);
-    })
-    .catch(err => {
-      res.json(err);
+  app.get("/api/workouts", (req, res) => {
+    db.Workout.find({}, (error, found) => {
+      if (error) {
+        console.log(error);
+      } else {
+        res.json(found);
+      }
     });
-});
+  });
 
+  app.post("/exercise", (req, res) => {
+    db.Workout.insert(
+      {
+        _id: mongojs.ObjectId(req.params.id)
+      },
+      {
+        $set: {
+          type: req.body.type,
+          name: req.body.name,
+          duration: req.body.duration,
+          weight: req.body.weight,
+          reps: req.body.reps,
+          sets: req.body.sets,
+          distance: req.body.distance,
+
+          day: Date.now()
+        }
+      },
+      (error, data) => {
+        if (error) {
+          res.send(error);
+        } else {
+          res.send(data);
+        }
+      }
+    );
+  });
 
   app.listen(3000, () => {
     console.log("App running on port 3000!");
