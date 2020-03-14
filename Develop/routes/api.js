@@ -1,16 +1,7 @@
-
+const mongoose = require("mongoose");
 var db = require("../models")
 
 module.exports = function(app) {
-
-  db.Workout.create({ name: "Workouts" })
-  .then(dbWorkout => {
-    console.log(dbWorkout);
-  })
-  .catch(({message}) => {
-    console.log(message);
-  });
-
   app.get("/api/workouts", (req, res) => {
     db.Workout.find({}, (error, found) => {
       if (error) {
@@ -21,24 +12,49 @@ module.exports = function(app) {
     });
   });
 
-  app.put("/workouts", function(req, res) {
-    db.Workout.update(req.body,
-      {
-        day:{
-          default: req.body
-        },
-        exercises: {
-          type: req.body.type,
-          name: req.body.name,
-          duration: req.body.duration,
-          weight: req.body.weight,
-          reps: req.body.reps,
-          sets: req.body.sets,
-          distance: req.body.distance,
-        }
+  app.get("/api/workouts/range", (req, res) => {
+    db.Workout.find({}, (error, found) => {
+      if (error) {
+        console.log(error);
+      } else {
+        res.json(found);
+      }
+    });
+  });
+  
+  
+  app.post("/api/workouts", ({ body }, res) => {
+    db.Workout.create(body)
+      .then(dbWorkout => {
+        res.json(dbWorkout);
       })
-      .then(function(dbPost) {
-        res.json(dbPost);
+      .catch(err => {
+        res.json(err);
       });
   });
+  
+
+  app.put("/api/workouts/:id", (req, res) => {
+      db.Workout.update(
+        {
+          _id: mongoose.ObjectId(req.params.id)
+        },
+        {
+          $push: {
+            exercises: req.body
+          }
+        },
+    
+        (error, edited) => {
+          if (error) {
+            console.log(error);
+            res.send(error);
+          } else {
+            console.log(edited);
+            res.send(edited);
+          }
+        }
+      );
+    });
 }
+
