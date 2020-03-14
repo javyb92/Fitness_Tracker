@@ -15,8 +15,6 @@ app.use(express.json());
 
 app.use(express.static("public"));
 
-// Routes
-// =============================================================
 require("./routes/api.js")(app);
 require("./routes/view.js")(app);
 

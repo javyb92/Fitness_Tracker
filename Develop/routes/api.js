@@ -13,12 +13,12 @@ module.exports = function(app) {
   });
 
   app.get("/api/workouts/range", (req, res) => {
-    db.Workout.find({}, (error, found) => {
-      if (error) {
-        console.log(error);
-      } else {
-        res.json(found);
-      }
+    db.Workout.find({}).limit(7)      
+      .then(dbWorkout => {
+        res.json(dbWorkout);
+    })
+    .catch(err => {
+      res.json(err);
     });
   });
   
@@ -35,9 +35,9 @@ module.exports = function(app) {
   
 
   app.put("/api/workouts/:id", (req, res) => {
-      db.Workout.update(
+      db.Workout.findByIdAndUpdate(
         {
-          _id: mongoose.ObjectId(req.params.id)
+          _id: mongoose.Types.ObjectId(req.params.id)
         },
         {
           $push: {

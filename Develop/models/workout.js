@@ -24,16 +24,18 @@ const WorkoutSchema = new Schema({
                 required: "Duration type is Required"
             },
             weight: { 
-                type: Number
+                type: Number,
             },
             reps: { 
-                type: Number
+                type: Number,
+
             },
             sets: {
-                type: Number
+                type: Number,
+
             },
             distance: {
-                type: Number
+                type: Number,
             }
         }
     ]
@@ -42,5 +44,12 @@ const WorkoutSchema = new Schema({
 const Workout = mongoose.model("Workout", WorkoutSchema);
 
 
+WorkoutSchema.methods.totalDuration = function() {
+    this.totalduration = `${this.duration}`;
+  
+    return this.totalduration;
+  };
+
+  console.log("totalduration")
 
 module.exports = Workout;
