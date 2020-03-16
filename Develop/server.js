@@ -16,7 +16,12 @@ app.use(express.static("public"));
 require("./routes/api")(app);
 require("./routes/view")(app);
 
-mongoose.connect(process.env.MONGODB_URI || "mongodb://localhost/populate", { useNewUrlParser: true , useFindAndModify: false});
+mongoose.Promise = global.Promise;
+
+mongoose.connect(process.env.MONGODB_URI || "mongodb://username:password1@ds137759.mlab.com:37759/heroku_3w6k50f2",
+{
+  useMongoClient: true
+});
  
 app.listen(3000, () => {
     console.log("App running on port 3000!");
