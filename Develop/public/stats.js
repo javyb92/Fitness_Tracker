@@ -188,9 +188,9 @@ function populateChart(data) {
 
 function duration(data) {
   let durations = [];
-
   data.forEach(workout => {
     workout.exercises.forEach(exercise => {
+      console.log(exercise);
       durations.push(exercise.duration);
     });
   });
